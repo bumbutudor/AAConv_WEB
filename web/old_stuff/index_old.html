@@ -1,0 +1,132 @@
+<!--21.11.16 18:02 v1.3 -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-sca--le=1">
+        <title>AAConv Convertor</title>
+        <link rel="stylesheet" href="bower_components/pure/pure-min.css" media="screen">
+        <link rel="stylesheet" href="public/css/views/app.css" media="screen">
+        <link rel="stylesheet" href="public/css/bootstrap.min.css">
+        <script type="text/javascript" src="public/js/jquery.min.js"></script>
+        <script type="text/javascript" src="public/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="public/js/FileSaver.min.js"></script> 
+    </head>
+    <body>
+
+        <div class="row" style = "padding:10px; background-color:#F5F5F5">
+
+            <div class="col-sm-2" align="center"><a href="index_old.html"><img src="public/logo/AAConv.png" alt="AAConv2"></a></div>
+
+            <div class="col-sm-4"  align="center" style="padding-top: 20px;">
+                <form >
+                    <input type="radio" name="period" id="sovietRb" checked>Sovietic sec XX&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <input type="radio" name="period" id="tranzRb">Transitional sec XIX
+                    <br/>
+                    <input type="radio" name="period" id="romanianRb">Romanian sec XVIII &nbsp
+                    <input type="radio" name="period" id="slavRb">Romanian sec XVII &nbsp        
+                </form>
+            </div>
+
+            <div class="col-sm-2" align="center" style="padding-top: 20px;"><input type="checkbox" name="Actualize_Ortography" id="actualizeCheckBox" checked="checked">Actualize Orthography &nbsp
+                <input type="button" value="Clear" onclick="ClearFields();">
+            </div>
+
+            <div class="col-sm-2" align="center" style="padding-top: 20px;">
+                <form action="upload" method="post" enctype="multipart/form-data"  id="formFileUpload">
+                    <input type="file" name="file" id="file">
+                    <input type="submit" value="Upload" >   
+                </form>
+            </div>
+
+            <div class="col-sm-2" style="padding-top: 20px;"><button id="btn-save" type="submit">Download Latin Text</button></div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <textarea  style = "width:103.4%; height:870px; resize:none;" name="cyrillic" id="cyrTextPanel" placeholder="Introduceti text chirilic aici..."></textarea>
+            </div>
+            <div class="col-sm-6">
+                <textarea style = "width:100%; height:870px;" name="latin" id="latTextPanel"  disabled placeholder="Aici va fi rezultatul" ></textarea>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="public/js/FileSaver.min.js"></script> 
+
+        <script>
+            $("#btn-save").click(function () {
+                var text = $("#latTextPanel").val();
+                var filename = "fileName_" + Math.floor((Math.random() * 999) + 1);
+                var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+                saveAs(blob, filename + ".txt");
+            });
+
+            function translit() {
+                var actualize = true;
+                var period = -1;
+
+                var cyrillicText = $('#cyrTextPanel').val();
+                cyrillicText = cyrillicText.replace(/%/g, "");
+                cyrillicText = cyrillicText.replace(/&/g, "");
+
+                if (document.getElementById('actualizeCheckBox').checked) {
+                    actualize = true;
+                } else {
+                    actualize = false;
+                }
+                if (document.getElementById('sovietRb').checked) {
+                    period = 0;
+                } else if (document.getElementById('tranzRb').checked) {
+                    period = 1;
+                } else if (document.getElementById('romanianRb').checked) {
+                    period = 2;
+                } else if (document.getElementById('slavRb').checked) {
+                    period = 3;
+                }
+                $.ajax({
+                    type: "post",
+                    //url: "http://udom.tk:8001/ProcessServlet", 
+                    url: "ProcessServlet",
+                    data: "cyrillicText=" + cyrillicText + "&period=" + period + "&actualize=" + actualize,
+                    success: function (msg) {
+                        document.getElementById("latTextPanel").value = msg.toString();
+                    }
+                });
+            }
+
+            function ClearFields() {
+                document.getElementById("cyrTextPanel").value = "";
+                document.getElementById("latTextPanel").value = "";
+            }
+
+            $(document).ready(function () {
+                $('#cyrTextPanel').add('#sovietRb').add('#tranzRb').add('#romanianRb').add('#slavRb').add('#actualizeCheckBox').on('change keyup paste', function ()
+                {
+                    translit();
+                });
+
+                document.getElementById('formFileUpload').onsubmit = function (e) {
+                    e.preventDefault();
+                    var file_data = $("#file").prop("files")[0];
+                    var form_data = new FormData();
+                    form_data.append("file", file_data);
+                    $.ajax({
+                        url: "upload",
+                        dataType: 'html',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: form_data,
+                        type: 'post',
+                        success: function (data) {
+                            document.getElementById("cyrTextPanel").value = data;
+                            translit();
+                        }
+                    });
+                    return false;
+                };
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!-- 
+    Author     : Richard Strauss
+    Design     : Tudor Bumbu
+    Modified   : 30.3.17 16:45 v2.2
+--> 
+<html lang="en">
+    <head>
+        <title>AAConv Convertor</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="bower_components/pure/pure-min.css" media="screen">
+        <link rel="stylesheet" href="public/css/views/app.css" media="screen">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="public/css/views/bootstrap.min.css">
+        <script type="text/javascript" src="public/js/jquery.min.js"></script>
+        <script type="text/javascript" src="public/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="public/js/FileSaver.min.js"></script> 
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>                        
+                    </button>
+                    <a href="index.html"><img src="public/logo/AAConv5.png" alt="AAConv5"></a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav navbar">
+                        <li>
+                            <a href="#">
+                                <select class="form-control" name="period" id="period">
+                                    <option id="sovietRb">Sovietic sec XX</option>
+                                    <option id="tranzRb">Transitional sec XIX</option>
+                                    <option id="romanianRb">Romanian sec XVIII</option>
+                                    <option id="slavRb">Romanian sec XVII</option>
+                                </select>
+                            </a>
+                        </li>
+                        <li><a href="#"><input type="checkbox" name="Actualize_Ortography" id="actualizeCheckBox" checked="checked">&nbsp Actualize Orthography </a></li>
+                        <li><a href="#"><input type="button" class="btn btn-primary" value="Clear" onclick="ClearFields();"></a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">
+                                <label class="btn btn-default btn-file">
+                                    <span class="glyphicon glyphicon-upload"></span>Upload File<input type="file" style="display: none;"  onchange="loadfile(this)">
+                                </label></a></li>
+                        <li class="dropdown1"><button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                          <span class="glyphicon glyphicon-download"></span>Download Latin Text</button>
+                          <ul class="dropdown-menu">
+                            <li>&nbsp<button class="btn btn-default" id="btn-save-txt" type="submit">.txt</button>
+                                <button class="btn btn-default" id="btn-save-doc" type="submit">.doc</button>
+                                <button class="btn btn-default" id="btn-save-rtf" type="submit">.rtf</button>
+                            </li>
+                          </ul>
+                       </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">    
+            <div class="row text-area-box">
+                <div class="col-sm-6">
+                    <textarea name="cyrillic" id="cyrTextPanel" placeholder="Insert the cyrillic text..."></textarea>
+<!--                    <textarea name="cyrillic" id="cyrTextPanel" placeholder="Insert the cyrillic text..." onselect="lookup();"></textarea>-->
+
+                </div>
+                <div class="col-sm-6"> 
+                    <textarea name="latin" id="latTextPanel" disabled placeholder="Enjoy the result"></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2018 Institute of Mathematics and Computer Science, Chisinau</p>
+        </footer>
+        
+        <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="public/js/FileSaver.min.js"></script> 
+        <script src="main.js"></script>   
+    </body>
+</html>
